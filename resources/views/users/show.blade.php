@@ -24,6 +24,7 @@
                         <div class="panel-heading">
                             <img class="img-responsive marginesy"  src="{{url('users-avatar/'.$user->id.'/60')}}" alt="avatar"/>
                             {{$post->user->name}}
+                            {{$post->created_ad}}
                         </div>
 
                         <div class="panel-body">
