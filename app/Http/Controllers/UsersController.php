@@ -21,10 +21,14 @@ class UsersController extends Controller {
         $this->middleware('permission',['except'=>['show']]);
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function show($id) {
        
         $user = User::findOrFail($id);
-        $posts = Post::where('user_id',$id)->get();
+        $posts = Post::where("user_id", $id)->get();
 
         return view('users.show', compact('user','posts'));
     }
@@ -56,13 +60,18 @@ class UsersController extends Controller {
         $this->validate($request, [
             'name' => 'required|max:255|min:3',
             'sex' => 'required',
-            'avatar' => 'required|mimes:jpeg,bmp,png',
+            'avatar' => 'required|mimes:jpeg,bmp,png,jpg',
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($id)],
         ]);
         $user = User::findOrFail($id);
-        $user_avatar_path = 'storage/users/' . $id . '/avatars/';
-        $avatar_filename = 'avatar' . $id . '.jpg';
-        $img = Image::make($request->file('avatar'))->fit(400)->save($user_avatar_path . $avatar_filename, 85);
+        if ($request->file('avatar')) {
+
+            $user_avatar_path = 'storage/users/' . $id . '/avatars/';
+            Storage::makeDirectory('public/users/'.$id.'/avatars/');
+            $extension = $request->file('avatar')->extension();
+            $avatar_filename = 'avatar' . $id .'.'. $extension;
+            $img = Image::make($request->file('avatar'))->fit(400)->save($user_avatar_path . $avatar_filename, 85);
+        }
 
         $user->avatar = $avatar_filename;
         $user->email = $request->email;

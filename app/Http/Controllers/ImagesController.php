@@ -3,15 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
 use Intervention\Image\Facades\Image;
+use App\User;
 
-class ImagesController extends Controller {
-
-    public function users_avatar($id, $size) {
-        $ht = 'http';
+class ImagesController extends Controller
+{
+    public function users_avatar($id, $size)
+    {
         $user = User::findOrFail($id);
-        $result = strpos($user->avatar, $ht);
 
         if (is_null($user->avatar)) {
             $img = Image::make('https://cdn0.iconfinder.com/data/icons/user-pictures/100/unknown2-512.png')->fit($size)->response('jpg', 90);
@@ -21,10 +20,7 @@ class ImagesController extends Controller {
             $avatar_path = asset('storage/users/' . $id . '/avatars/' . $user->avatar);
             $img = Image::make($avatar_path)->fit($size)->response('jpg', 90);
         }
+
         return $img;
     }
-
 }
-
-//
-
