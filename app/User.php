@@ -27,6 +27,8 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+
+
     public function friends1()
     {
         return $this->belongsToMany('\App\User', 'friends', 'user_id', 'friend_id')->wherePivot('accepted', 1);

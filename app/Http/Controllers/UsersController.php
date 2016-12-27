@@ -18,7 +18,7 @@ class UsersController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function __construct() {
-        $this->middleware('permission',['except'=>['show']]);
+        $this->middleware('user_permission',['except'=>['show']]);
     }
 
     /**
@@ -28,9 +28,10 @@ class UsersController extends Controller {
     public function show($id) {
        
         $user = User::findOrFail($id);
-        $posts = Post::where("user_id", $id)->get();
+        $posts = $user->posts()->get();
+        return view('users.show', compact('user', 'posts'));
 
-        return view('users.show', compact('user','posts'));
+
     }
 
     /**

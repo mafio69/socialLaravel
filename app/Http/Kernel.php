@@ -4,6 +4,7 @@ namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
+
 class Kernel extends HttpKernel
 {
     /**
@@ -52,6 +53,7 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'permission' => \App\Http\Middleware\CheckUserPermission::class,
+        'user_permission' => \App\Http\Middleware\CheckUserPermission::class,
+        'post_permission' => \App\Http\Middleware\CheckPostPermission::class,
     ];
 }

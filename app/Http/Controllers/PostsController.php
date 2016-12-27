@@ -7,6 +7,10 @@ use App\Post;
 
 class PostsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('post_permission', ['only' => ['edit','update','destroy']]);
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -20,7 +24,7 @@ class PostsController extends Controller
             'post_content' => 'required|min:3',
         ]);
         Post::create([
-            'content'=>$request->post_content ,
+            'content' => $request->post_content,
             'user_id' => auth()->id(),
         ]);
         return back();
@@ -37,6 +41,7 @@ class PostsController extends Controller
         $post = Post::findOrFail($id);
         return view('posts.show', compact('post'));
     }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -45,7 +50,8 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        return view('posts.edit',compact('post'));
     }
 
     /**
@@ -57,6 +63,14 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            'post_content' => 'required|min:3',
+        ]);
+       $post = Post::findOrFail($id);
+       $post->content = $request->post_content;
+       $post->save();
+       return redirect('users/'.auth()->id());
+
 
     }
 
