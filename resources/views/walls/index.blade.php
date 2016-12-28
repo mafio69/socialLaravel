@@ -9,27 +9,26 @@
             <div class="col-md-7">
 
                 @if (auth()->check())
+                    <div class="panel panel-default">
 
-                    @if (auth()->id() == Request::segment(2))
-                        <div class="panel panel-default">
+                        @if (auth()->check() )
+
                             <div class="panel-body">
                                 @include('posts.include.create')
                             </div>
-                        </div>
-                    @endif
 
+                        @endif
+
+                    </div>
                 @endif
-                @if($posts->count() > 0)
+
                 @foreach($posts as $post)
                     @include('posts.include.single')
                 @endforeach
-                @else
-                    <p>Brak wpisów :-( </p>
-                @endif
+
                 <div class="text-center">
                     {{$posts}}
                 </div>
-
             </div>
 
         </div>

@@ -22,5 +22,5 @@ elixir((mix) => {
     mix.sass([
          'app.scss'
 
-     ], 'public/assets/css');
+     ], 'public/css');
 });

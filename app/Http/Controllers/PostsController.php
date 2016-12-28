@@ -82,6 +82,9 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::withTrashed()
+            ->where('id', $id)
+            ->delete();
+        return redirect('users/'.auth()->id());
     }
 }

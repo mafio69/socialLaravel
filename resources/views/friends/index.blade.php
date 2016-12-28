@@ -5,7 +5,7 @@
     <div class="row">
          @include('layouts.sidebar') 
      
-        <div class="col-md-8 col-md-offset-1">
+        <div class="col-md-9 ">
             <div class="panel panel-default">
 
                 <div class="panel-heading">Lista znajomych {{$user->friends()->count()}}</div>
@@ -18,7 +18,7 @@
                     <div class="col-md-4">
                         <img class="img-responsive center-block thumbnail" style="margin-top:.5rem;" src="{{url('users-avatar/'.$friend->id.'/150')}}" alt="avatar"/>
                         <p style="margin:.5rem">{{$friend->name}} <br> {{$friend->email}} </p>
-                        <a href="{{url('users/'.$friend->id)}}" class="pull-right">Wyświetl</a>
+                        <a href="{{url('users/'.$friend->id)}}" class="pull-right marginesy"><i class="fa fa-eye" aria-hidden="true"></i> Wyświetl</a>
                     </div>
 
                     @endforeach

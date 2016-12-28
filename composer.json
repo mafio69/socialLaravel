@@ -8,6 +8,7 @@
         "php": ">=5.6.4",
         "laravel/framework": "5.3.*",
         "intervention/image": "^2.3",
+
         "barryvdh/laravel-ide-helper": "dev-master",
         "xzxzyzyz/laravel-validation": "v0.1.5"
     },

@@ -2,21 +2,25 @@
     <div class="panel panel-default">
         <div class="panel-heading ">Użytkownik
             @if (Auth::check() && $user->id == Auth::id())
-            <a class="pull-right" href="{{url('/users/'.$user->id.'/edit')}}"><small>Edytuj</small></a>
+                <a class="pull-right" href="{{url('/users/'.$user->id.'/edit')}}"><i class="fa fa-pencil-square-o"
+                                                                                     aria-hidden="true"></i></a>
             @endif
         </div>
-        <img class="img-responsive center-block" style="margin-top:.5rem;" src="{{url('users-avatar/'.$user->id.'/180')}}" alt="avatar"/>
+        <img class="img-responsive center-block" style="margin-top:.5rem;"
+             src="{{url('users-avatar/'.$user->id.'/180')}}" alt="avatar"/>
         <p style='margin: .5rem' class="text-center">
             <a href='{{url('users/'.$user->id)}}'>{{ $user->name }}</a><br>
             {{ $user->email }}<br>
             @if (Request::segment(1) !== 'friends')
-            <a  class="btn btn-link center-block" href="{{url('friends/'.$user->id.'')}}" >Pokaż znajomych 
-                <span class="label label-default">{{$user->friends()->count()}}</span></a>
-            @endif    
+                <a class="btn btn-link center-block" href="{{url('friends/'.$user->id.'')}}"><i class="fa fa-eye"
+                                                                                                aria-hidden="true"></i>
+                    Pokaż znajomych
+                    <span class="label label-default">{{$user->friends()->count()}}</span></a>
+            @endif
             @if ($user->sex == 'm')
-            Mężczyzna
-            @else 
-            Kobieta
+                Mężczyzna
+            @else
+                Kobieta
             @endif
         </p>
         @if (Auth::check() && $user->id !== Auth::id())
@@ -39,12 +43,14 @@
                 <form action="{{url('friends/'.$user->id)}}" method="POST">
                     {{ csrf_field() }}
                     {{ method_field('DELETE') }}
-                    <button type="submit" onclick="confirm('treść komunikatu');" class="btn btn-warning btn-sm center-block">Usuń znajomego</button>
+                    <button type="submit" onclick="return confirm('Czy na pewno?');"
+                            class="btn btn-warning btn-sm center-block"><i class="fa fa-trash-o" aria-hidden="true"></i> Usuń znajomego
+                    </button>
                 </form>
             @endif
         @endif
         <div class="panel-body">
-            
+
         </div>
-    </div>  
+    </div>
 </div>

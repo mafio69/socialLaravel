@@ -14,6 +14,7 @@
         <link href="{{ url('css/app.css')}}" rel="stylesheet">
 
         <!-- Scripts -->
+        <script src="https://use.fontawesome.com/6044cadb34.js"></script>
         <script>
             window.Laravel = <?php
 echo json_encode([
@@ -64,21 +65,32 @@ echo json_encode([
                             <li><a href="{{ url('/login') }}">Logowanie</a></li>
                             <li><a href="{{ url('/register') }}">Rejstracja</a></li>
                             @else
+                                <li>
+                                    <a href="{{ url('/wall') }}"><i class="fa fa-outdent" aria-hidden="true"></i> Tablica</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('/users/' . Auth::id()) }}"><i class="fa fa-user" aria-hidden="true"></i> {{ Auth::user()->name }}</a>
+                                </li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                    <i class="fa fa-caret-square-o-down" aria-hidden="true"></i>
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a href="{{ url('/logout') }}"
-                                           onclick="event.preventDefault();
-                                                   document.getElementById('logout-form').submit();">
-                                            Logout
-                                        </a>
+
+
                                         @if (Auth::check())
-                                        <a  href="{{url('/users/'.Auth::id().'/edit')}}">Profil</a>
+                                        <li>
+                                            <a href="{{ url('/users/' . Auth::id()) . '/edit' }}">Edytuj swój profil</a>
+                                        </li>
+
                                         @endif
+                                        <li>
+                                        <a href="{{ url('/logout') }}"
+                                                 onclick="event.preventDefault();
+                                                   document.getElementById('logout-form').submit();">
+                                            Wyloguj
+                                        </a>
                                         <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>

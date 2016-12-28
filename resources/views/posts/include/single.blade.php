@@ -11,16 +11,15 @@
                     </a>
                 </div>
                 @if ($post->user->id == auth()->id())
-                    <br>
-                    <a href="{{url('posts/'.$post->id.'/edit')}}" class="btn btn-link pull-right ">
-                        <small>Edytuj</small>
-                    </a>
+
+                  @include('posts.include.dropdownmenu')
+
                 @endif
             </div>
             <div class="panel-body">
-            <div id="post_{{ $post->id }}" style="margin-top: 10px;">
-                {{ $post->content }}
-            </div>
+                <div id="post_{{ $post->id }}" style="margin-top: 10px;">
+                    {{ $post->content }}
+                </div>
             </div>
         </div>
     </div>
