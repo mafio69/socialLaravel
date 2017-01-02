@@ -20,11 +20,13 @@
 
                 @endif
                 @if($posts->count() > 0)
-                @foreach($posts as $post)
-                    @include('posts.include.single')
-                @endforeach
+                    @foreach($posts as $post)
+                        @include('posts.include.single')
+                    @endforeach
                 @else
-                    <p>Brak wpisów :-( </p>
+                    <div class="text-center">
+                        <h4>Brak wpisów <i class="fa fa-frown-o" aria-hidden="true"></i></h4>
+                    </div>
                 @endif
                 <div class="text-center">
                     {{$posts}}
