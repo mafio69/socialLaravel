@@ -1,7 +1,7 @@
 <div class='col-md-3'>
     <div class="panel panel-default">
         <div class="panel-heading ">Użytkownik
-            @if (Auth::check() && $user->id == Auth::id())
+            @if (belongs_to_auth(auth()->id()))
                 <a class="pull-right" href="{{url('/users/'.$user->id.'/edit')}}"><i class="fa fa-pencil-square-o"
                                                                                      aria-hidden="true"></i></a>
             @endif
@@ -22,8 +22,9 @@
             @else
                 Kobieta
             @endif
+            {{Auth::user()->role->type}}
         </p>
-        @if (Auth::check() && $user->id !== Auth::id())
+        @if (!belongs_to_auth(auth()->id()))
             @if (!friendship($user->id)->exists && !has_friend($user->id))
                 <form action="{{url('friends/'.$user->id)}}" method="POST">
                     {{ csrf_field() }}

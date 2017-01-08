@@ -2,10 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Comment;
 use Closure;
-use App\Post;
 
-class CheckPostPermission
+
+class CheckCommentPermission
 {
     /**
      * Handle an incoming request.
@@ -17,8 +18,8 @@ class CheckPostPermission
     public function handle($request, Closure $next)
 
     {
-        $post_exist = Post::where('id', $request->post)->where('user_id',auth()->id())->exists();
-      if((auth()->check() && $post_exist )|| is_admin()){
+        $comment_exist = Comment::where('id', $request->comment)->where('user_id',auth()->id())->exists();
+      if((auth()->check() && $comment_exist) || is_admin()){
           return $next($request);
       } else {
           abort(403 , 'Brak dostępu');

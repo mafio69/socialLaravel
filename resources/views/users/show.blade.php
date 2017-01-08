@@ -10,7 +10,7 @@
 
                 @if (auth()->check())
 
-                    @if (auth()->id() == Request::segment(2))
+                    @if (auth()->check() && auth()->id() == Request::segment(2))
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 @include('posts.include.create')

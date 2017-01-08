@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
 use App\Friend;
+use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,83 +15,126 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(UsersTableSeeder::class);
 
-    	$faker = Faker::create('pl_PL');
+        $faker = Faker::create('pl_PL');
 
-    	/* =============== VARIABLES =============== */
+        /* =============== VARIABLES =============== */
 
-    	$number_of_users = 20;
-    	$password = '123456';
+        $number_of_users = 20;
+        $password = '123456';
+        $max_post_per_user = 10;
+        $max_per_comments = 4;
 
-    	/* =============== USERS =============== */
+        /* =============== USERS =============== */
+        DB::table('roles')->insert([
+            'id' => 1,
+            'type' => 'admin',
+            'created_at' => date('Y-m-d G:i:s'),
+        ]);
+        DB::table('roles')->insert([
+            'id' => 2,
+            'type' => 'moderator',
+            'created_at' => date('Y-m-d G:i:s'),
+        ]);
+        DB::table('roles')->insert([
+            'id' => 3,
+            'type' => 'user',
+            'created_at' => date('Y-m-d G:i:s'),
+        ]);
 
-    	for ($user_id = 1; $user_id <= $number_of_users; $user_id++) {
+        for ($user_id = 1; $user_id <= $number_of_users; $user_id++) {
 
-    		if ($user_id === 1) {
+            if ($user_id === 1) {
 
-		    	DB::table('users')->insert([
-		    		'name' => 'Mariusz Franciszczak',
-		    		'email' => 'mariusz@designmf.pl',
-		    		'sex' => 'm',
-		    		'password' => bcrypt($password),
-                                'avatar' => 'avatar1.jpg',
-		    	]);
+                DB::table('users')->insert([
+                    'role_id' => 1,
+                    'name' => 'Mariusz Franciszczak',
+                    'email' => 'mariusz@designmf.pl',
+                    'sex' => 'm',
+                    'password' => bcrypt($password),
+                    'avatar' => 'avatar1.jpg',
+                    'created_at' => $faker->dateTimeThisYear($max = 'now'),
 
-    		} else {
+                ]);
 
-	    		$sex = $faker->randomElement(['m', 'f']);
+            } else {
 
-	    		switch ($sex) {
+                $sex = $faker->randomElement(['m', 'f']);
 
-	    			case 'm':
-	    				$name = $faker->firstNameMale . ' ' . $faker->lastNameMale;
-	    				$avatar = json_decode(file_get_contents('https://randomuser.me/api/?gender=male'))->results[0]->picture->large;
-	    				break;
+                switch ($sex) {
 
-	    			case 'f':
-				    	$name = $faker->firstNameFemale . ' ' . $faker->lastNameFemale;
-				    	$avatar = json_decode(file_get_contents('https://randomuser.me/api/?gender=female'))->results[0]->picture->large;
-	    				break;
+                    case 'm':
+                        $name = $faker->firstNameMale . ' ' . $faker->lastNameMale;
+                        $avatar = json_decode(file_get_contents('https://randomuser.me/api/?gender=male'))->results[0]->picture->large;
+                        break;
 
-	    		}
+                    case 'f':
+                        $name = $faker->firstNameFemale . ' ' . $faker->lastNameFemale;
+                        $avatar = json_decode(file_get_contents('https://randomuser.me/api/?gender=female'))->results[0]->picture->large;
+                        break;
 
-		    	DB::table('users')->insert([
-		    		'name' => $name,
-		    		'email' => str_replace('-', '', str_slug($name)) . '@' . $faker->safeEmailDomain,
-		    		'sex' => $sex,
-		    		'avatar' => $avatar,
-		    		'password' => bcrypt($password),
-		    	]);
+                }
 
-    		}
+                DB::table('users')->insert([
+                    'role_id' => 3,
+                    'name' => $name,
+                    'email' => str_replace('-', '', str_slug($name)) . '@' . $faker->safeEmailDomain,
+                    'sex' => $sex,
+                    'avatar' => $avatar,
+                    'password' => bcrypt($password),
+                    'created_at' => $faker->dateTimeThisYear($max = 'now'),
+                ]);
 
-    	/* =============== FRIENDS =============== */
+            } // If $user_id
 
-    		for ($i = 1; $i <= $faker->numberBetween($min = 0, $max = $number_of_users - 1); $i++) {
+            /* =============== FRIENDS =============== */
 
-    			$friend_id = $faker->numberBetween($min = 1, $max = $number_of_users);
+            for ($i = 1; $i <= $faker->numberBetween($min = 0, $max = $number_of_users - 1); $i++) {
 
-				$friendship_exists = Friend::where([
-					'user_id' => $user_id,
-					'friend_id' => $friend_id,
-				])->orWhere([
-					'user_id' => $friend_id,
-					'friend_id' => $user_id,
-				])->exists();
+                $friend_id = $faker->numberBetween($min = 1, $max = $number_of_users);
 
-    			if ( ! $friendship_exists) {
+                $friendship_exists = Friend::where([
+                    'user_id' => $user_id,
+                    'friend_id' => $friend_id,
+                ])->orWhere([
+                    'user_id' => $friend_id,
+                    'friend_id' => $user_id,
+                ])->exists();
 
-			    	DB::table('friends')->insert([
-			    		'user_id' => $user_id,
-			    		'friend_id' => $friend_id,
-			    		'accepted' => 1,
-			    		'created_at' => $faker->dateTimeThisYear($max = 'now'),
-			    	]);
+                if (!$friendship_exists) {
 
-    			}
+                    DB::table('friends')->insert([
+                        'user_id' => $user_id,
+                        'friend_id' => $friend_id,
+                        'accepted' => 1,
+                        'created_at' => $faker->dateTimeThisYear($max = 'now'),
+                    ]);
 
-    		}
+                }
 
-    	}
+            } // Koniec pętli Friends Loop
+            /* =============== POSTS =============== */
+            for ($post_id = 1; $post_id <= $faker->numberBetween($min = 0, $max = $max_post_per_user); $post_id++) {
+                DB::table('posts')->insert([
+                    'user_id' => $user_id,
+                    'content' => $faker->paragraph($nbSenteces = 1, $variableNbSentecens = true),
+                    'created_at' => $faker->dateTimeThisYear($max = 'now'),
+                ]);
+
+                /* =============== comments =============== */
+                $post_id_comment = DB::getPdo()->lastInsertId();
+                for ($i = 1; $i <= $faker->numberBetween($min = 0, $max = $max_per_comments); $i++) {
+                    DB::table('comments')->insert([
+                        'post_id' => $post_id_comment,
+                        'user_id' => $faker->numberBetween($min = 1, $max = $number_of_users),
+                        'content' => $faker->paragraph($nbSenteces = 1, $variableNbSentecens = true),
+                        'created_at' => $faker->dateTimeThisYear($max = 'now'),
+                    ]);
+
+                } // end loop comments
+            } //Koniec pętli Post Loop
+
+        } // Koniec pętli User Loop
+
 
     }
 }

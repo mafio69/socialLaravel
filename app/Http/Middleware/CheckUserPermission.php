@@ -17,7 +17,7 @@ class CheckUserPermission {
     public function handle($request, Closure $next) {
 //       echo Auth::id().$request->user;
 //       exit();
-        if (Auth::check() && (Auth::id() == $request->user)) {
+        if (belongs_to_auth($request->user) ||is_admin()) {
             return $next($request);
         } else {
             abort(403, 'Brak dostepu');

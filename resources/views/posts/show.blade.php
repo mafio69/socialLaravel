@@ -8,7 +8,9 @@
                 @if($posts->count()>0)
                     @include('posts.include.single')
                 @else
-                    <p>Brak wpisów</p>
+                    <div class="text-center">
+                    <h4>Brak wpisów <i class="fa fa-frown-o" aria-hidden="true"></i></h4>
+                    </div>
                 @endif
             </div>
 
