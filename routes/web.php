@@ -28,4 +28,6 @@ Route::post('/friends/{friend_id}', 'FriendsController@add')->name('friends.add'
 Route::resource('/posts','PostsController',['except' => ['index','create']]);
 Route::get('/wall', 'WallsController@index');
 Route::resource('/comments' , 'CommentsController',['except' =>['index','create','show']]);
+Route::post('/likes', 'LikesController@add');
+Route::delete('/likes/{like}','LikesController@destroy');
 

@@ -18,6 +18,16 @@ class Post extends Model
         return $this->belongsTo('App\User');
     }
     public function comments(){
-        return $this->hasMany('App\Comment')->orderBy('created_at','desc');
+        if(is_admin()){
+            return $this->hasMany('App\Comment')->orderBy('created_at','desc')->withTrashed();
+        }else{
+            return $this->hasMany('App\Comment')->orderBy('created_at','desc');
+        }
+
+    }
+
+    public function likes()
+    {
+        return $this->hasMany('App\Like');
     }
 }

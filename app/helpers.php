@@ -45,7 +45,13 @@ function belongs_to_auth($user_id)
 
 function is_admin()
 {
-    return (auth()->check() && Auth::user()->role->type === 'admin');
+    return (auth()->check() && auth()->user()->role->type === 'admin');
+
+}
+function is_moderator()
+{
+    return (auth()->check() && auth()->user()->role->type === 'moderator');
+
 }
 
 function czas($data)
@@ -82,13 +88,13 @@ function czas($data)
     if ($time_stamp < 60) {
         return 'Wpis dodano przed minutą';
     } elseif ($t < 1 && $d > 0) {
-        return  $d ." dni, ". $g .  " godzin, " . $m. " minut. " ;
+        return  $d ." dni, ". $g .  " godziny, " . $m. " minut. " ;
     } elseif ($t < 1 && $d < 1 && $g > 0) {
-        return  $g . "  godzin, " . $m." minut." ;
+        return  $g . "  godziny, " . $m." minut." ;
     } elseif ($t < 1 && $d < 1 && $g < 1 && $m > 0) {
         return  $m ."  minut. " ;
-    } elseif ($t > 1 && $t < 2) {
-        return  $t . " tygodni, " . $d . " dni, " . $g . " godzin " . $m . " minut .";
+    } elseif ($t > 1 && $t <= 2) {
+        return  $t . " tygodni, " . $d . " dni, " . $g . " godziny " . $m . " minut .";
     } else {
         //return $time_stamp . '-' . $t . '-' . $d;
         return 'Więcej niż dwa tygodnie.';

@@ -38,7 +38,12 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        $post = Post::findOrFail($id);
+        if(is_admin()){
+            $post = Post::findOrFail($id)->withTrashed();
+        }else{
+            $post = Post::findOrFail($id);
+        }
+
         return view('posts.show', compact('post'));
     }
 
@@ -50,7 +55,11 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        $post = Post::findOrFail($id);
+        if(is_admin()){
+            $post = Post::findOrFail($id)->withTrashed();
+        }else{
+            $post = Post::findOrFail($id);
+        }
         return view('posts.edit',compact('post'));
     }
 
@@ -82,9 +91,19 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        $post = Post::withTrashed()
-            ->where('id', $id)
-            ->delete();
+        /*$post = Post::withTrashed()
+        ->where('id', $id)
+        ->delete();*/
+        if(is_admin()){
+            $post= Post::find($id);
+            $post->forceDelete();
+            $post->comments()->forceDelete();
+        }else{
+            $post= Post::find($id);
+            $post->delete();
+            $post->comments()->delete();
+        }
+
         return redirect('users/'.auth()->id());
     }
 }

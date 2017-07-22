@@ -1,4 +1,4 @@
-@if(belongs_to_auth(auth()->id()) ||is_admin() )
+@if(belongs_to_auth($comment->id) ||is_admin() )
     <div class="dropdown pull-right">
         <a class="dropdown-toggle" id="dropdownMenu1"
            data-toggle="dropdown"

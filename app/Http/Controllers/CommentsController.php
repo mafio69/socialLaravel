@@ -16,12 +16,12 @@ class CommentsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $post_id_comment_content = 'post_' . $request->post_id .'_comment_content';
+        $post_id_comment_content = 'post_' . $request->post_id . '_comment_content';
         $post_comment = $request->$post_id_comment_content;
 
 
@@ -37,24 +37,25 @@ class CommentsController extends Controller
         Comment::create([
             'post_id' => $request->post_id,
             'user_id' => auth()->id(),
-            'content' =>   $post_comment,
+            'content' => $post_comment,
         ]);
 
         return back();
     }
+
     // Wysyła formularz edycji
     public function edit($id)
     {
 
         $comment = Comment::findOrFail($id);
-       return view('comments.edit', compact('comment'));
+        return view('comments.edit', compact('comment'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -68,14 +69,20 @@ class CommentsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $comment = Comment::withTrashed()
-            ->where('id', $id)
-            ->delete();
+        if (is_admin()) {
+            Comment::where('id', $id)
+                ->forceDelete();
+        } else {
+            Comment::withTrashed()
+                ->where('id', $id)
+                ->delete();
+        }
+
         return redirect('/wall');
     }
 }

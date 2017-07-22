@@ -2,8 +2,8 @@
     <div class="panel panel-default">
         <div class="panel-heading ">Użytkownik
             @if (belongs_to_auth(auth()->id()))
-                <a class="pull-right" href="{{url('/users/'.$user->id.'/edit')}}"><i class="fa fa-pencil-square-o"
-                                                                                     aria-hidden="true"></i></a>
+                <a class="pull-right" href="{{url('/users/'.$user->id.'/edit')}}" title="Edytuj"><i class="fa fa-pencil-square-o"
+                                                                                     ></i></a>
             @endif
         </div>
         <img class="img-responsive center-block" style="margin-top:.5rem;"
@@ -22,7 +22,7 @@
             @else
                 Kobieta
             @endif
-            {{Auth::user()->role->type}}
+
         </p>
         @if (!belongs_to_auth(auth()->id()))
             @if (!friendship($user->id)->exists && !has_friend($user->id))

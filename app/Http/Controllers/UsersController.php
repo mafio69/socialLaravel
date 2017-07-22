@@ -2,34 +2,48 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\User;
 use App\Post;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
+use App\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Intervention\Image\Facades\Image;
 
-class UsersController extends Controller {
+class UsersController extends Controller
+{
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function __construct() {
-        $this->middleware('user_permission',['except'=>['show']]);
+    public function __construct()
+    {
+        $this->middleware('user_permission', ['except' => ['show']]);
     }
 
     /**
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show($id) {
-       
+    public function show($id)
+    {
+
         $user = User::findOrFail($id);
         //$posts = $user->posts()->paginate(10);
-        $posts = Post::with('comments.user')->where('user_id', $id )->paginate(20);
+        if (is_admin()) {
+            $posts = Post::with('comments.user','likes')
+                ->withTrashed()
+                ->where('user_id', $id)
+                ->orderBy('created_at', 'desc')
+                ->paginate(20);
+        } else {
+
+            $posts = Post::with('comments.user','likes')
+                ->where('user_id', $id)
+                ->orderBy('created_at', 'desc')
+                ->paginate(20);
+        }
         return view('users.show', compact('user', 'posts'));
 
 
@@ -38,10 +52,11 @@ class UsersController extends Controller {
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
+    public function edit($id)
+    {
 
         $user = User::findOrFail($id);
         return view('users.edit', compact('user'));
@@ -50,13 +65,14 @@ class UsersController extends Controller {
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
-     * 
-     * 
+     *
+     *
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         //echo
 
         $this->validate($request, [
@@ -67,12 +83,11 @@ class UsersController extends Controller {
         ]);
         $user = User::findOrFail($id);
         if ($request->file('avatar')) {
-
-            $user_avatar_path = 'storage/users/' . $id . '/avatars/';
-            Storage::makeDirectory('public/users/'.$id.'/avatars/');
+            $user_avatar_path =  'storage'.DIRECTORY_SEPARATOR.'users'.DIRECTORY_SEPARATOR . $id .DIRECTORY_SEPARATOR.'avatars'.DIRECTORY_SEPARATOR;
+            Storage::makeDirectory('public/users/' . $id . '/avatars/',755);
             $extension = $request->file('avatar')->extension();
-            $avatar_filename = 'avatar' . $id .'.'. $extension;
-            $img = Image::make($request->file('avatar'))->fit(400)->save($user_avatar_path . $avatar_filename, 85);
+            $avatar_filename = 'avatar' . $id . '.' . $extension;
+            Image::make($request->file('avatar'))->fit(400)->save($user_avatar_path.$avatar_filename,80);
         }
 
         $user->avatar = $avatar_filename;
@@ -86,10 +101,11 @@ class UsersController extends Controller {
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         //
     }
 
