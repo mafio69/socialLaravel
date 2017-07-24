@@ -8,18 +8,22 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Auth;
 
-class FriendRequest extends Notification
+class PostCommented extends Notification
 {
     use Queueable;
+    protected $post_id;
+    protected $comment_id;
+
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($post_id , $comment_id)
     {
-        //
+        $this->post_id = $post_id;
+        $this->comment_id = $comment_id;
     }
 
     /**
@@ -30,7 +34,6 @@ class FriendRequest extends Notification
      */
     public function via($notifiable)
     {
-        //phpreturn ['mail', 'array'];
         return ['database'];
     }
 
@@ -56,18 +59,9 @@ class FriendRequest extends Notification
      */
     public function toArray($notifiable)
     {
-        $link = '<a href="/users/' . Auth::id() . '" title="Odwiedź ustronę">' . Auth::user()->name . '</a>';
-        if (auth()->user()->sex == 'm') {
-            $message = ' Masz zaproszenie do znajomych. Od uzytkownika : ';
-        } else {
-            $message = ' Masz zaproszenie do znajomych. Od uzytkowniczki : ';
-        }
 
         return [
-            'message' => $message . $link,
+           'message' => 'Użytkownik : '.auth()->user()->name.' skomentował Twój <a href="/posts/'.$this->post_id.'">post</a>' ,
         ];
-
-
     }
-
 }

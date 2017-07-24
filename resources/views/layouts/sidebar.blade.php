@@ -24,7 +24,7 @@
             @endif
 
         </p>
-        @if (!belongs_to_auth(auth()->id()))
+        @if (Auth::check() && $user->id !== Auth::id())
             @if (!friendship($user->id)->exists && !has_friend($user->id))
                 <form action="{{url('friends/'.$user->id)}}" method="POST">
                     {{ csrf_field() }}
@@ -45,7 +45,7 @@
                     {{ csrf_field() }}
                     {{ method_field('DELETE') }}
                     <button type="submit" onclick="return confirm('Czy na pewno?');"
-                            class="btn btn-warning btn-sm center-block"><i class="fa fa-trash-o" aria-hidden="true"></i> Usuń znajomego
+                            class="btn btn-warning btn-sm center-block btn-xs"><i class="fa fa-trash-o" aria-hidden="true"></i> Usuń znajomego
                     </button>
                 </form>
             @endif

@@ -66,10 +66,15 @@ echo json_encode([
                             <li><a href="{{ url('/register') }}">Rejstracja</a></li>
                             @else
                                 <li>
-                                    <a href="{{ url('/wall') }}"><i class="fa fa-outdent" aria-hidden="true"></i> Tablica</a>
+                                    <a href="{{ url('/wall') }}"><i class="fa fa-outdent"></i> Tablica</a>
                                 </li>
                                 <li>
-                                    <a href="{{ url('/users/' . Auth::id()) }}"><i class="fa fa-user" aria-hidden="true"></i> {{ Auth::user()->name }}</a>
+                                    <a href="{{ url('/notifications') }}"><i class="fa fa-commenting"></i>Powiadomienia
+                                           {!!  Auth::user()->unreadNotifications->count()>0 ? '<span  class="label label-danger">'.Auth::user()->unreadNotifications->count().'</span>' : '<i style="color:green;" class="fa fa-check" ></i>'!!}
+                                        </a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('/users/' . Auth::id()) }}"><i class="fa fa-user"></i> {{ Auth::user()->name }}</a>
                                 </li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

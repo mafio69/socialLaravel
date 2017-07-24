@@ -3,7 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Comment;
+use App\Notifications\PostCommented;
+use App\Post;
+use App\User;
 use Illuminate\Http\Request;
+
+
 
 class CommentsController extends Controller
 {
@@ -34,11 +39,19 @@ class CommentsController extends Controller
             'min' => 'Treść musi mieć minimum :min znaków',
         ]);
 
-        Comment::create([
+        $comment = Comment::create([
             'post_id' => $request->post_id,
             'user_id' => auth()->id(),
             'content' => $post_comment,
         ]);
+        $post = Post::findOrFail($request->post_id);
+
+        var_dump($post);
+        //$user = User::findOrFail('id',$post->user_id);
+        //var_dump($user);
+        if ($post->user_id !=auth()->id()) {
+            User::findOrFail($post->user_id)->notify(new PostCommented($request->post_id, $comment->id));
+        }
 
         return back();
     }

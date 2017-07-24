@@ -15,17 +15,25 @@ class WallsController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 
     public function index()
     {
 
+        if(auth()->check()){
         $user = User::find(auth()->id());
         $friends = User::FindOrFail(auth()->id())->friends();
         $collect_user_ids[] = auth()->id();
+
         foreach ($friends as $friend) {
             $collect_user_ids[] = $friend->id; // Tu wybieram przyjaciół i zapisuje w tablicy kolekcji
+        }
+        }else{
+            foreach (User::all() as $user) {
+                $collect_user_ids[] = $user->id; // Tu wybieram przyjaciół i zapisuje w tablicy kolekcji
+            }
+
         }
         if (is_admin()) {
             $posts = Post::with('comments.user')// with to pobiera dane by potem na stronie nie odpytywać bazy danych\
