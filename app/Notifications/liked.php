@@ -6,24 +6,19 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Support\Facades\Auth;
 
-class PostCommented extends Notification
+class liked extends Notification
 {
     use Queueable;
-    protected $post_id;
-    protected $comment_id;
-
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($post_id , $comment_id)
+    public function __construct()
     {
-        $this->post_id = $post_id;
-        $this->comment_id = $comment_id;
+        //
     }
 
     /**
@@ -34,7 +29,7 @@ class PostCommented extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ['mail'];
     }
 
     /**
@@ -59,9 +54,8 @@ class PostCommented extends Notification
      */
     public function toArray($notifiable)
     {
-
         return [
-           'message' => 'Użytkownik : '.auth()->user()->name.' skomentował Twój <a href="/posts/'.$this->post_id.'#comment_'.$this->comment_id.'">post</a>' ,
+            //
         ];
     }
 }

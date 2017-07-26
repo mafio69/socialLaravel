@@ -16,3 +16,24 @@
 
 
 </div>
+
+@section('footer')
+    <script>
+               function addHighlightClass() {
+                   if (window.location.hash.substring(1)) {
+                   let hash = window.location.hash.substring(1);
+                   //console.log(hash);
+                   let comment = document.getElementById(hash);
+                   comment.classList.add('highlight');
+                   comment.classList.add('highlightYellow');
+                   setTimeout(function () {
+                       comment.classList.remove('highlightYellow');
+                   }, 4500);
+               }
+            }
+            window.addEventListener('load',addHighlightClass);
+            window.addEventListener('hashchange', function(){
+                addHighlightClass();
+            }, false);
+    </script>
+@endsection

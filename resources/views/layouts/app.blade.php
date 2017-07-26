@@ -114,5 +114,6 @@ echo json_encode([
 
         <!-- Scripts -->
         <script src="{{url('js/app.js')}}"></script>
+    @yield('footer')
     </body>
 </html>
